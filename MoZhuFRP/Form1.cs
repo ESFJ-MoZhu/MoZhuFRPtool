@@ -5,14 +5,14 @@ using System.IO;
 using System.Text;
 namespace MoZhuFRP
 {
-    public partial class Ä«ÖñFRP : Form
+    public partial class å¢¨ç«¹FRP : Form
     {
         private Process frpProcess;
         private string port = "";
         private const string configPATH = @".\frpc\frpc.toml";
         private bool isChecked = false;
         private string protocol = "tcp";
-        private const string runFRP = @".\frpc\frpc.exe -c .\frpc\frpc.toml";//·´Ğ±¸ÜĞèÒª×ªÒå×Ö·û
+        private const string runFRP = @".\frpc\frpc.exe -c .\frpc\frpc.toml";//åæ–œæ éœ€è¦è½¬ä¹‰å­—ç¬¦
         private string configSimple = "";
 
         public int generateRandomNumber()
@@ -21,7 +21,7 @@ namespace MoZhuFRP
             int randomNumber = random.Next(0,999); 
             return randomNumber;
         }
-        public Ä«ÖñFRP()
+        public å¢¨ç«¹FRP()
         {
             InitializeComponent();
         }
@@ -29,7 +29,7 @@ namespace MoZhuFRP
         {
             int number = generateRandomNumber();
             this.configSimple = $"""
-                serverAddr = "120.27.158.236"
+                serverAddr = ""//å¡«å†™ä½ çš„å…¬ç½‘æœåŠ¡å™¨åœ°å€
                 serverPort = 7000
 
                 [[proxies]]
@@ -49,14 +49,14 @@ namespace MoZhuFRP
         }
 
 
-        // Ö´ĞĞÃüÁî²¢µÈ´ıÍê³É
+        // æ‰§è¡Œå‘½ä»¤å¹¶ç­‰å¾…å®Œæˆ
 
 
         private async Task ExecuteCommand(string command, bool cmdView)
         {
             if (port == "")
             {
-                MessageBox.Show("Ã»ÓĞÊäÈë¶Ë¿ÚºÅ!:(");
+                MessageBox.Show("æ²¡æœ‰è¾“å…¥ç«¯å£å·!:(");
                 return;
             }
             createConfigFile(port);
@@ -78,29 +78,29 @@ namespace MoZhuFRP
                     frpProcess.StartInfo = startInfo;
                     frpProcess.EnableRaisingEvents = true;
 
-                    // ´´½¨Ò»¸ö TaskCompletionSource À´µÈ´ı½ø³ÌÍË³ö
+                    // åˆ›å»ºä¸€ä¸ª TaskCompletionSource æ¥ç­‰å¾…è¿›ç¨‹é€€å‡º
                     var tcs = new TaskCompletionSource<bool>();
                     frpProcess.Exited += (s, e) => tcs.TrySetResult(true);
 
-                    // ¶ÁÈ¡Êä³öÁ÷ºÍ´íÎóÁ÷
+                    // è¯»å–è¾“å‡ºæµå’Œé”™è¯¯æµ
                     frpProcess.OutputDataReceived += (s, e) =>
                     {
                         if (e.Data != null)
                         {
-                            // ÔÚÕâÀï¼ì²éÊä³öµÄÄÚÈİ
+                            // åœ¨è¿™é‡Œæ£€æŸ¥è¾“å‡ºçš„å†…å®¹
                             if (e.Data.Contains("port already used"))
                             {
-                                MessageBox.Show("¶Ë¿ÚÒÑÕ¼ÓÃ£¬Çë»»Ò»¸ö¶Ë¿Ú°É~");
+                                MessageBox.Show("ç«¯å£å·²å ç”¨ï¼Œè¯·æ¢ä¸€ä¸ªç«¯å£å§~");
                                 return;
                             }
                             else if(e.Data.Contains("start error"))
                             {
-                                MessageBox.Show("³öÎÊÌâÁË£¬ÏêÇéÇë´ò¿ª¿ØÖÆÌ¨Êä³ö²é¿´~");
+                                MessageBox.Show("å‡ºé—®é¢˜äº†ï¼Œè¯¦æƒ…è¯·æ‰“å¼€æ§åˆ¶å°è¾“å‡ºæŸ¥çœ‹~");
                                 return;
                             }
                             else if (e.Data.Contains("error"))
                             {
-                                MessageBox.Show("³öÎÊÌâÁË£¬ÏêÇéÇë´ò¿ª¿ØÖÆÌ¨Êä³ö²é¿´~");
+                                MessageBox.Show("å‡ºé—®é¢˜äº†ï¼Œè¯¦æƒ…è¯·æ‰“å¼€æ§åˆ¶å°è¾“å‡ºæŸ¥çœ‹~");
                                 return;
                             }
                         }
@@ -110,7 +110,7 @@ namespace MoZhuFRP
                     {
                         if (e.Data != null)
                         {
-                            Console.WriteLine("frpc Error: " + e.Data);  // ´òÓ¡´íÎóÊä³ö
+                            Console.WriteLine("frpc Error: " + e.Data);  // æ‰“å°é”™è¯¯è¾“å‡º
                         }
                     };
 
@@ -118,28 +118,28 @@ namespace MoZhuFRP
 
                     if (!cmdView)
                     {
-                        // ¿ªÊ¼Òì²½¶ÁÈ¡Êä³öºÍ´íÎóÁ÷
+                        // å¼€å§‹å¼‚æ­¥è¯»å–è¾“å‡ºå’Œé”™è¯¯æµ
                         frpProcess.BeginOutputReadLine();
                         frpProcess.BeginErrorReadLine();
                     }
 
 
-                    MessageBox.Show($"ÄÚÍø´©Í¸Æô¶¯³É¹¦(´ó¸ÅÂÊ³É¹¦ÁË,Èç¹û²»ºÃÓÃÇë´ò¿ª¿ØÖÆÌ¨Êä³ö¼ì²é´íÎó£¬ÊÇ·ñÓĞ¶Ë¿ÚÕ¼ÓÃµÈÎÊÌâ)£¡Ê¹ÓÃµØÖ·120.27.158.236:{port}·ÃÎÊ£¨IP¿ÉÌæ»»Îªzhuzimiko.com£©,ÒÑ¾­°ïÄã¸´ÖÆµ½ÁËÕ³Ìù°åÁË~");
-                    Clipboard.SetText("120.27.158.236:" + port);
+                    MessageBox.Show($"å†…ç½‘ç©¿é€å¯åŠ¨æˆåŠŸ(å¤§æ¦‚ç‡æˆåŠŸäº†,å¦‚æœä¸å¥½ç”¨è¯·æ‰“å¼€æ§åˆ¶å°è¾“å‡ºæ£€æŸ¥é”™è¯¯ï¼Œæ˜¯å¦æœ‰ç«¯å£å ç”¨ç­‰é—®é¢˜)ï¼ä½¿ç”¨åœ°å€å…¬ç½‘æœåŠ¡å™¨åœ°å€:{port}è®¿é—®ï¼ˆIPå¯æ›¿æ¢ä¸ºzhuzimiko.comï¼‰,å·²ç»å¸®ä½ å¤åˆ¶åˆ°äº†ç²˜è´´æ¿äº†~");
+                    Clipboard.SetText("å…¬ç½‘æœåŠ¡å™¨åœ°å€" + port);
                     await tcs.Task;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Æô¶¯Ê§°Ü: {ex.Message}");
+                MessageBox.Show($"å¯åŠ¨å¤±è´¥: {ex.Message}");
             }
             finally
             {
-                frpProcess = null; // È·±£ÊÍ·ÅÒıÓÃ
+                frpProcess = null; // ç¡®ä¿é‡Šæ”¾å¼•ç”¨
             }
         }
 
-        //³ÌĞò¹Ø±ÕÊ±½áÊøºóÌ¨frp
+        //ç¨‹åºå…³é—­æ—¶ç»“æŸåå°frp
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             if (frpProcess != null && !frpProcess.HasExited)
@@ -147,11 +147,11 @@ namespace MoZhuFRP
                 try
                 {
                     frpProcess.Kill();
-                    frpProcess.WaitForExit(1000); // µÈ´ı1ÃëÈ·±£ÖÕÖ¹
+                    frpProcess.WaitForExit(1000); // ç­‰å¾…1ç§’ç¡®ä¿ç»ˆæ­¢
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"ÖÕÖ¹½ø³ÌÊ±³ö´í: {ex.Message}");
+                    Debug.WriteLine($"ç»ˆæ­¢è¿›ç¨‹æ—¶å‡ºé”™: {ex.Message}");
                 }
             }
             base.OnFormClosing(e);
@@ -192,17 +192,17 @@ namespace MoZhuFRP
         {
             string selectedProtocol = comboBox1.SelectedItem?.ToString();
 
-            // ¿ÕÖµ¼ì²é
+            // ç©ºå€¼æ£€æŸ¥
             if (!string.IsNullOrEmpty(selectedProtocol))
             {
                 switch (selectedProtocol)
                 {
                     case "TCP":
-                        // Ö´ĞĞTCPÏà¹Ø²Ù×÷
+                        // æ‰§è¡ŒTCPç›¸å…³æ“ä½œ
                         this.protocol = "tcp";
                         break;
                     case "UDP":
-                        // Ö´ĞĞUDPÏà¹Ø²Ù×÷
+                        // æ‰§è¡ŒUDPç›¸å…³æ“ä½œ
                         this.protocol = "udp";
                         break;
                 }
